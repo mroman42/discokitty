@@ -7,6 +7,12 @@
 -- An implementation of the cups and objects of the category of
 -- relations.
 
+{-|
+Module: Rel
+Description: Cups and objects of the category of relations.
+License: GPL-3
+|-}
+
 module Rel
   ( Rel
   , fromList

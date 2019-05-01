@@ -1,5 +1,11 @@
 {-# LANGUAGE FlexibleInstances #-}
 
+{-|
+Module: Words
+Description: Data for a word in the Discocat framework.
+License: GPL-3
+|-}
+
 module Words where
 
 import           Data.Maybe
@@ -8,6 +14,8 @@ import           HasCups
 import           Lambek
 import           Rel
 
+-- | A word is given by a meaning and a grammatical type.  The Words
+-- type is parameterized over the meaning type.
 data Words m = Words
   { meaning :: m
   , grammar :: Lambek
@@ -18,6 +26,7 @@ instance Show m => Show (Words m) where
 
 instance Dim (Words Rel) where
   dim = dim . meaning
+
 
 size :: Words m -> Int
 size w = length (grammar w)
@@ -30,6 +39,7 @@ maybeCon n u v =
       , grammar = reverse (drop n (reverse $ grammar u)) ++ drop n (grammar v)
       }
     else Nothing
+
 
 tryConcatenate :: (HasCups m) => Int -> Words m -> Words m -> [Words m]
 tryConcatenate n a b = catMaybes $ [maybeCon m a b | m <- [0..n]]
