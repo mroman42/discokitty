@@ -1,12 +1,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module MainVit where
+module Examples.LesJustesViterbi where
 
-import qualified Data.Map     as Map
-import           Lambek
-import           MainVec
-import qualified Multiwords   as M
-import           Vectorspaces
+import qualified Data.Map            as Map
+import           Lambek              ()
+import           Models.Vectorspaces
+import qualified Multiwords          as M
 import           Words
 
 -- Viterbi semiring
@@ -18,11 +17,11 @@ instance Semiring Viterbi where
   zero = 0
 
 -- Reals -> Viterbi translation
-v :: M.Multiword (Vectorspace Double) -> M.Multiword (Vectorspace Viterbi)
+v :: M.Multiword (Vectorspace u Double) -> M.Multiword (Vectorspace u Viterbi)
 v = M.fromList . fmap (\ (x , p) -> (v' x , p) ) . M.toList
   where
-    v' :: Words (Vectorspace Double) -> Words (Vectorspace Viterbi)
+    v' :: Words (Vectorspace u Double) -> Words (Vectorspace u Viterbi)
     v' w = w { meaning = v'' (meaning w) }
 
-    v'' :: Vectorspace Double -> Vectorspace Viterbi
+    v'' :: Vectorspace u Double -> Vectorspace u Viterbi
     v'' = fromMap . Map.map Viterbi . toMap

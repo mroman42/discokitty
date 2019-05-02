@@ -5,7 +5,7 @@ import           Data.Semigroup
 import           Dimension
 import           HasCups
 import           Lambek
-import           Rel            hiding (fromList, toList)
+-- import           Rel            hiding (fromList, toList)
 import           Words
 
 type Probability = Double

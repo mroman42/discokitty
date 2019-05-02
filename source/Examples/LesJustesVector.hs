@@ -2,12 +2,13 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE UndecidableInstances       #-}
 
-module MainVec where
+module Examples.LesJustesVector where
 
+import           Data.Semigroup
+import           Examples.LesJustesUniverse
 import           Lambek
-import qualified Multiwords   as M
-import           Universe
-import           Vectorspaces
+import           Models.Vectorspaces
+import qualified Multiwords                 as M
 import           Words
 
 
@@ -18,21 +19,21 @@ instance Semiring Double where
   unit = 1
   zero = 0
 
-yanek' :: Words (Vectorspace Double)
+yanek' :: Words (Vectorspace Universe Double)
 yanek' = Words (fromList
   [ ([Yanek] , 1)
   , ([Poet]  , 0.7)
   , ([Revolutionary] , 0.9)
   ]) [N]
 
-dora' :: Words (Vectorspace Double)
+dora' :: Words (Vectorspace Universe Double)
 dora' = Words (fromList
   [ ([Dora] , 1)
   , ([Revolutionary] , 0.9)
   , ([Poet] , 0.3)
   ]) [N]
 
-likes' :: Words (Vectorspace Double)
+likes' :: Words (Vectorspace Universe Double)
 likes' = Words (fromList
   [ ([Yanek , IsTrue , Dora] , 0.9)
   , ([Dora , IsTrue , Yanek] , 0.8)
@@ -48,7 +49,7 @@ likes' = Words (fromList
   , ([Boris , IsTrue , Propaganda] , 0.6)
   ]) [L N , S , R N]
 
-combat' :: Words (Vectorspace Double)
+combat' :: Words (Vectorspace Universe Double)
 combat' = Words (fromList
   [ ([Yanek , IsTrue , Duke] , 1)
   , ([Yanek , IsTrue , Skouratov] , 0.7)
@@ -63,7 +64,7 @@ combat' = Words (fromList
   , ([Skouratov , IsTrue , Stepan] , 1)
   ]) [L N , S , R N]
 
-is' :: Words (Vectorspace Double)
+is' :: Words (Vectorspace Universe Double)
 is' = Words (fromList
   [ ([Yanek , IsTrue , Revolutionary] , 0.9)
   , ([Yanek , IsTrue , Poet] , 1)
@@ -81,7 +82,7 @@ is' = Words (fromList
   , ([Yanek , IsTrue , Innocent] , 0.5)
   ]) [L N , S , R N]
 
-people' :: (Semiring m) => Words (Vectorspace m)
+people' :: (Semiring m) => Words (Vectorspace Universe m)
 people' = Words (fromList
   [ ([Yanek] , unit)
   , ([Dora] , unit)
@@ -101,14 +102,15 @@ is = M.singleton is'
 people = M.singleton people'
 combat = M.singleton combat'
 
-who :: (Semiring m) => M.Multiword (Vectorspace m)
+who :: (Semiring m) => M.Multiword (Vectorspace Universe m)
 who = M.singleton $ Words
   (fromList [ ([a,a,b,a], unit) | a <- universe , b <- universe])
   [L N , N , R S , N]
 
-basis :: Universe -> M.Multiword (Vectorspace m)
+basis :: (Semiring m) => Universe -> M.Multiword (Vectorspace Universe m)
 basis t = M.singleton $ Words (fromList [ ([t], unit) ]) [N]
 
+tsarist, life, propaganda, poetry, innocent, terrorist :: (Semiring m) => M.Multiword (Vectorspace Universe m)
 tsarist    = basis Tsarist
 life       = basis Life
 propaganda = basis Propaganda
@@ -117,15 +119,16 @@ innocent   = basis Innocent
 terrorist  = basis Terrorist
 
 
-revolutionary :: (Semiring m) => M.Multiword (Vectorspace m)
+revolutionary :: (Semiring m) => M.Multiword (Vectorspace Universe m)
 revolutionary = M.singleton $ Words (fromList [ ([Revolutionary], unit) ]) [N]
 
-tsarists :: M.Multiword (Vectorspace Double)
+tsarists :: M.Multiword (Vectorspace Universe Double)
 tsarists = (people <> who <> is <> tsarist) M.@@ [N]
 
-revolutionaries :: M.Multiword (Vectorspace Double)
+revolutionaries :: M.Multiword (Vectorspace Universe Double)
 revolutionaries = (people <> who <> is <> revolutionary) M.@@ [N]
 
+that, are :: M.Multiword (Vectorspace Universe Double)
 that = who
 are = is
 

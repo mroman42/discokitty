@@ -4,16 +4,13 @@
 {-# LANGUAGE GADTs                     #-}
 {-# LANGUAGE TupleSections             #-}
 
--- An implementation of the cups and objects of the category of
--- relations.
-
 {-|
 Module: Rel
 Description: Cups and objects of the category of relations.
 License: GPL-3
 |-}
 
-module Rel
+module Models.Rel
   ( Rel
   , fromList
   , toList
@@ -26,51 +23,55 @@ where
 import           Data.Maybe
 import qualified Data.Set   as S
 import           Dimension
+import           Finite
 import           HasCups
-import           Universe
+import           Words
 
--- A relation hom(1,a) is given by a subset of the universe with
--- elements in a.
-data Rel = Rel (S.Set UniverseN)
+-- | A relation hom(1,a) is given by a subset of the universe with
+-- elements in a. We model this using the Data.Set library.
+data Rel u = Rel (S.Set [u])
 
-fromList :: [UniverseN] -> Rel
+fromList :: (Ord u) => [[u]] -> Rel u
 fromList = Rel . S.fromList
 
-toList :: Rel -> [UniverseN]
+toList :: Rel u -> [[u]]
 toList (Rel u) = S.toList u
 
-instance Show Rel where
+instance (Show u) => Show (Rel u) where
   show = show . toList
 
-instance Dim Rel where
+instance Dim (Rel u) where
   dim = dimRel
 
-dimRel :: Rel -> Int
+dimRel :: Rel u -> Int
 dimRel = dimList . toList
   where
     dimList []      = 0
     dimList (l : _) = length l
 
-idn :: Int -> Rel
+idn :: (Finite u, Ord u) => Int -> Rel u
 idn n = fromList $ do
   u <- universe
   return $ replicate n u
 
-relCup :: Int -> Rel -> Rel -> Rel
+relCup :: (Ord u) => Int -> Rel u -> Rel u -> Rel u
 relCup n r s = fromList $ catMaybes $ fmap (agrees n) $ do
   x <- toList r
   y <- toList s
   return (x,y)
 
-relCunit :: Rel
+relCunit :: (Ord u) => Rel u
 relCunit = fromList [[]]
 
-agrees :: Int -> (UniverseN , UniverseN) -> Maybe UniverseN
+agrees :: (Eq u) => Int -> ([u] , [u]) -> Maybe [u]
 agrees n (x , y) =
   if take n (reverse x) == take n y
     then Just $ reverse (drop n (reverse x)) ++ drop n y
     else Nothing
 
-instance HasCups Rel where
+instance (Ord u) => HasCups (Rel u) where
   cup = relCup
   cunit = relCunit
+
+instance Dim (Words (Rel u)) where
+  dim = dim . meaning

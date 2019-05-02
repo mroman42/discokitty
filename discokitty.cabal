@@ -20,23 +20,18 @@ source-repository head
 
 
                        
-executable discokitty
+Library
   hs-source-dirs:      ./source
-  main-is:             Main.hs
   build-depends:       base >=4.7 && <5,
                        containers >= 0.5.7.1
-                       
-                       
-  other-modules:       Dimension
+  exposed-modules:     Dimension
                        HasCups
                        Lambek
-                       MainVec
-                       MainVit
                        Multiwords
-                       Rel
-                       Universe
-                       Vectorspaces
                        Words
+                       Finite
+                       Models.Rel
+                       Models.Vectorspaces
                        Examples.LesJustesMain
                        Examples.LesJustesUniverse
                        Examples.LesJustesViterbi

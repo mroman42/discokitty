@@ -12,7 +12,6 @@ import           Data.Maybe
 import           Dimension
 import           HasCups
 import           Lambek
-import           Rel
 
 -- | A word is given by a meaning and a grammatical type.  The Words
 -- type is parameterized over the meaning type.
@@ -23,9 +22,6 @@ data Words m = Words
 
 instance Show m => Show (Words m) where
   show w = show (meaning w) ++ " of grammar type " ++ show (grammar w)
-
-instance Dim (Words Rel) where
-  dim = dim . meaning
 
 
 size :: Words m -> Int

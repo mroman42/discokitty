@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 
 -- A finite universe for the play.
-module Universe
+module Examples.LesJustesUniverse
   ( Universe (..)
   , universe
   , UniverseN
@@ -58,3 +58,4 @@ type UniverseN = [Universe]
 
 instance Dim UniverseN where
   dim = length
+
