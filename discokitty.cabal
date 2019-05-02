@@ -36,6 +36,7 @@ Library
                        Examples.LesJustesUniverse
                        Examples.LesJustesViterbi
                        Examples.LesJustesVector
+                       Examples.AliceAndBob
 
   default-language:    Haskell2010
   ghc-options:         -Wall
