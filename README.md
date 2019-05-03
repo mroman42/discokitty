@@ -1,5 +1,5 @@
 # discokitty
-An educational implementation of the DisCoCat framework
+An educational implementation of the DisCoCat framework as described in *"Mathematical Foundations for a Compositional Distributional Model of Meaning"* ([link](https://arxiv.org/abs/1003.4394)) by Coecke, Sadrzadeh and Clark.
 
 <img src="https://raw.githubusercontent.com/mroman42/discokitty/master/logo.png" width="200" align="center">
 
