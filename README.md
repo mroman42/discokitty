@@ -1,5 +1,5 @@
 # discokitty
-An educational implementation of the DisCoCat framework
+An educational implementation of the DisCoCat framework 
 
 <img src="https://raw.githubusercontent.com/mroman42/discokitty/master/logo.png" width="200" align="center">
 
@@ -11,7 +11,7 @@ An educational implementation of the DisCoCat framework
 Please note that this library is work in progress and it is possible
 that substantial changes will be made.  In the following example we
 work in the category of relations declaring the meaning and grammar
-type of some words and then 
+type of some words and then we evaluate a sentence example.
 
 ``` haskell
 import           Discokitty
