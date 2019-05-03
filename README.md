@@ -1,5 +1,7 @@
 # discokitty
 
+![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
+
 An educational implementation of the DisCoCat framework as described
 in *"Mathematical Foundations for a Compositional Distributional Model
 of Meaning"* ([link](https://arxiv.org/abs/1003.4394)) by Coecke,
