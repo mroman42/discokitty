@@ -1,12 +1,12 @@
-module Models.Vectorspaces where
+module Discokitty.Models.Vectorspaces where
 
 -- Implementation of cups in the category of matrices over a semiring.
 
 import           Data.List
-import qualified Data.Map   as Map
+import qualified Data.Map             as Map
 import           Data.Maybe
-import           Dimension
-import           HasCups
+import           Discokitty.Dimension
+import           Discokitty.HasCups
 
 class (Eq m, Ord m) => Semiring m where
   plus :: m -> m -> m

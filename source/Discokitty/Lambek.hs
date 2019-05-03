@@ -6,8 +6,7 @@ Description: Lambek grammatical types
 License: GPL-3
 |-}
 
-
-module Lambek
+module Discokitty.Lambek
   ( Type (..)
   , Lambek
   , agreeOn

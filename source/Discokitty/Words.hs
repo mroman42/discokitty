@@ -6,12 +6,19 @@ Description: Data for a word in the Discocat framework.
 License: GPL-3
 |-}
 
-module Words where
+module Discokitty.Words
+  ( Words (..)
+  , sentence
+  , concatenate
+  , emptyWord
+  , (@@@)
+  )
+where
 
 import           Data.Maybe
-import           Dimension
-import           HasCups
-import           Lambek
+import           Discokitty.Dimension
+import           Discokitty.HasCups
+import           Discokitty.Lambek
 
 -- | A word is given by a meaning and a grammatical type.  The Words
 -- type is parameterized over the meaning type.

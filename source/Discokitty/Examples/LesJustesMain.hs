@@ -1,11 +1,11 @@
-module Examples.LesJustesMain where
+module Discokitty.Examples.LesJustesMain where
 
 import           Data.Semigroup
-import           Examples.LesJustesUniverse
-import           Lambek
-import           Models.Rel
-import qualified Multiwords                 as M
-import           Words
+import           Discokitty
+import           Discokitty.Examples.LesJustesUniverse
+import           Discokitty.Models.Rel
+import qualified Discokitty.Multiwords                 as M
+
 
 type RelU = Rel Universe
 

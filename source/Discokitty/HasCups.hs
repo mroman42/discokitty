@@ -7,7 +7,7 @@ Required operations for a meaning type to have some form of formal
 cups. These can be used in Lambek reductions later.
 |-}
 
-module HasCups where
+module Discokitty.HasCups where
 
 class HasCups m where
   -- | Given an integer, performs that number of cups between the two

@@ -10,7 +10,7 @@ Description: Cups and objects of the category of relations.
 License: GPL-3
 |-}
 
-module Models.Rel
+module Discokitty.Models.Rel
   ( Rel
   , fromList
   , toList
@@ -21,11 +21,11 @@ module Models.Rel
 where
 
 import           Data.Maybe
-import qualified Data.Set   as S
-import           Dimension
-import           Finite
-import           HasCups
-import           Words
+import qualified Data.Set             as S
+import           Discokitty.Dimension
+import           Discokitty.Finite
+import           Discokitty.HasCups
+import           Discokitty.Words
 
 -- | A relation hom(1,a) is given by a subset of the universe with
 -- elements in a. We model this using the Data.Set library.

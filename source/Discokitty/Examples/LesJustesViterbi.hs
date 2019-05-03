@@ -1,12 +1,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Examples.LesJustesViterbi where
+module Discokitty.Examples.LesJustesViterbi where
 
-import qualified Data.Map            as Map
-import           Lambek              ()
-import           Models.Vectorspaces
-import qualified Multiwords          as M
-import           Words
+import qualified Data.Map                       as Map
+import           Discokitty
+import           Discokitty.Models.Vectorspaces
+import qualified Discokitty.Multiwords          as M
+
 
 -- Viterbi semiring
 newtype Viterbi = Viterbi Double deriving (Eq, Show, Num, Ord)

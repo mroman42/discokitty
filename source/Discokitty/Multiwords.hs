@@ -1,12 +1,10 @@
-module Multiwords where
+module Discokitty.Multiwords where
 
 import           Data.List
 import           Data.Semigroup
-import           Dimension
-import           HasCups
-import           Lambek
--- import           Rel            hiding (fromList, toList)
-import           Words
+import           Discokitty.HasCups
+import           Discokitty.Lambek
+import           Discokitty.Words
 
 type Probability = Double
 

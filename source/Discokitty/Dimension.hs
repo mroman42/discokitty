@@ -1,4 +1,4 @@
-module Dimension where
+module Discokitty.Dimension where
 
 class Dim a where
   -- | In the meaning space, objects have dimensions.

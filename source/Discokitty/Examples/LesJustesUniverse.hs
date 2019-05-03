@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 
 -- A finite universe for the play.
-module Examples.LesJustesUniverse
+module Discokitty.Examples.LesJustesUniverse
   ( Universe (..)
   , universe
   , UniverseN
@@ -10,7 +10,7 @@ module Examples.LesJustesUniverse
   )
   where
 
-import           Dimension
+import           Discokitty
 
 data Universe
   = Universe
@@ -51,8 +51,8 @@ data Universe
   deriving (Eq, Show, Bounded, Enum, Ord)
 
 -- Enumerate all possible values.
-universe :: [Universe]
-universe = [minBound .. maxBound]
+instance Finite Universe where
+  universe = [minBound .. maxBound]
 
 type UniverseN = [Universe]
 

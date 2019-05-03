@@ -12,7 +12,7 @@ category:            Language
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
-tested-with:         GHC == 8.0.2
+tested-with:         GHC >= 8.6.3
                                           
 source-repository head
   type:           git
@@ -24,19 +24,21 @@ Library
   hs-source-dirs:      ./source
   build-depends:       base >=4.7 && <5,
                        containers >= 0.5.7.1
-  exposed-modules:     Dimension
-                       HasCups
-                       Lambek
-                       Multiwords
-                       Words
-                       Finite
-                       Models.Rel
-                       Models.Vectorspaces
-                       Examples.LesJustesMain
-                       Examples.LesJustesUniverse
-                       Examples.LesJustesViterbi
-                       Examples.LesJustesVector
-                       Examples.AliceAndBob
+  exposed-modules:     Discokitty
+                       Discokitty.Models.Rel
+                       Discokitty.Models.Vectorspaces
+                       Discokitty.Examples.LesJustesMain
+                       Discokitty.Examples.LesJustesUniverse
+                       Discokitty.Examples.LesJustesViterbi
+                       Discokitty.Examples.LesJustesVector
+                       Discokitty.Examples.AliceAndBob
+
+  other-modules:       Discokitty.Dimension
+                       Discokitty.Finite
+                       Discokitty.HasCups
+                       Discokitty.Lambek
+                       Discokitty.Words
+                       Discokitty.Multiwords
 
   default-language:    Haskell2010
   ghc-options:         -Wall

@@ -2,14 +2,14 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE UndecidableInstances       #-}
 
-module Examples.LesJustesVector where
+module Discokitty.Examples.LesJustesVector where
 
 import           Data.Semigroup
-import           Examples.LesJustesUniverse
-import           Lambek
-import           Models.Vectorspaces
-import qualified Multiwords                 as M
-import           Words
+import           Discokitty
+import           Discokitty.Examples.LesJustesUniverse
+import           Discokitty.Models.Vectorspaces
+import qualified Discokitty.Multiwords                 as M
+
 
 
 -- The real numbers have the obvious semiring structure.
