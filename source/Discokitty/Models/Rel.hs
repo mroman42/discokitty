@@ -12,6 +12,7 @@ License: GPL-3
 
 module Discokitty.Models.Rel
   ( Rel
+  , relation
   , fromList
   , toList
   , idn
@@ -31,8 +32,11 @@ import           Discokitty.Words
 -- elements in a. We model this using the Data.Set library.
 data Rel u = Rel (S.Set [u])
 
+relation :: (Ord u) => [[u]] -> Rel u
+relation = Rel . S.fromList
+
 fromList :: (Ord u) => [[u]] -> Rel u
-fromList = Rel . S.fromList
+fromList = relation
 
 toList :: Rel u -> [[u]]
 toList (Rel u) = S.toList u
@@ -50,18 +54,18 @@ dimRel = dimList . toList
     dimList (l : _) = length l
 
 idn :: (Finite u, Ord u) => Int -> Rel u
-idn n = fromList $ do
+idn n = relation $ do
   u <- universe
   return $ replicate n u
 
 relCup :: (Ord u) => Int -> Rel u -> Rel u -> Rel u
-relCup n r s = fromList $ catMaybes $ fmap (agrees n) $ do
+relCup n r s = relation $ catMaybes $ fmap (agrees n) $ do
   x <- toList r
   y <- toList s
   return (x,y)
 
 relCunit :: (Ord u) => Rel u
-relCunit = fromList [[]]
+relCunit = relation [[]]
 
 agrees :: (Eq u) => Int -> ([u] , [u]) -> Maybe [u]
 agrees n (x , y) =

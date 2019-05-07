@@ -16,9 +16,9 @@ type Term = Words (Rel Universe)
 -- We give meaning to some terms.  Relations are described as subsets using
 -- "fromList", and the Lambek grammatical type must be written at the end.
 alice, bob, loves :: Term
-alice = Words (fromList [ [ Alice ] ]) [N]
-bob   = Words (fromList [ [ Bob ] ]) [N]
-loves = Words (fromList [ [ Alice , IsTrue , Bob ] ]) [ L N , S , R N ]
+alice = Words (relation [ [ Alice ] ]) [N]
+bob   = Words (relation [ [ Bob ] ]) [N]
+loves = Words (relation [ [ Alice , IsTrue , Bob ] ]) [ L N , S , R N ]
 
 -- In our example sentence, we evaluate "Alice loves Bob".
 example :: [Term]
