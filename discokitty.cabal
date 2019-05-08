@@ -34,7 +34,6 @@ Library
                        Discokitty.Examples.AliceAndBob
 
   other-modules:       Discokitty.Dimension
-                       Discokitty.Finite
                        Discokitty.HasCups
                        Discokitty.Lambek
                        Discokitty.Words

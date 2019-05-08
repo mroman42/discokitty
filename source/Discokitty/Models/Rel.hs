@@ -15,7 +15,6 @@ module Discokitty.Models.Rel
   , relation
   , fromList
   , toList
-  , idn
   , relCup
   , agrees
   )
@@ -24,7 +23,6 @@ where
 import           Data.Maybe
 import qualified Data.Set             as S
 import           Discokitty.Dimension
-import           Discokitty.Finite
 import           Discokitty.HasCups
 import           Discokitty.Words
 
@@ -52,11 +50,6 @@ dimRel = dimList . toList
   where
     dimList []      = 0
     dimList (l : _) = length l
-
-idn :: (Finite u, Ord u) => Int -> Rel u
-idn n = relation $ do
-  u <- universe
-  return $ replicate n u
 
 relCup :: (Ord u) => Int -> Rel u -> Rel u -> Rel u
 relCup n r s = relation $ catMaybes $ fmap (agrees n) $ do

@@ -4,8 +4,8 @@
 -- A finite universe for the play.
 module Discokitty.Examples.LesJustesUniverse
   ( Universe (..)
-  , universe
   , UniverseN
+  , universe
   , dim
   )
   where
@@ -50,9 +50,8 @@ data Universe
 
   deriving (Eq, Show, Bounded, Enum, Ord)
 
--- Enumerate all possible values.
-instance Finite Universe where
-  universe = [minBound .. maxBound]
+universe :: [Universe]
+universe = [minBound .. maxBound]
 
 type UniverseN = [Universe]
 

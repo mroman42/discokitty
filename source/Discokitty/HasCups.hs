@@ -16,4 +16,3 @@ class HasCups m where
 
   -- | Neutral element for the cup operation.
   cunit :: m
-
