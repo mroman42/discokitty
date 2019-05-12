@@ -86,65 +86,8 @@ generateNodes offset w = Words
 schemaWords :: [Words m] -> [Words Schema]
 schemaWords ws = (generateNodes . length) ws <$> ws
 
-textDiagrams :: [Words m] -> [Diagram]
-textDiagrams ws = do
-  solution <- sentence $ schemaWords ws
-  let textWires = schemaWires $ meaning $ solution
-  let textNodes = schemaNodes $ meaning $ solution
-  return Diagram
-    { nodes = allWordNodes ++ textNodes
-    , wires = textWires
-    }
-  where
-
-    -- We need some word nodes that will generate triangles on the
-    -- final diagram.
-    allWordNodes :: [Node]
-    allWordNodes = fmap numberedNode $ zip [0..] ws
-
-    -- Numbered nodes.
-    numberedNode :: (Int , Words m) -> Node
-    numberedNode (n,w) = Node
-      { idNumber = n
-      , xPos     = fromIntegral n * 4
-      , yPos     = 0
-      , label    = text w
-      , style    = Copoint
-      }
 
 
-generateTikz :: Diagram -> String
-generateTikz diagram = unlines $
-  [ "\\begin{tikzpicture}"
-  , "\\begin{pgfonlayer}{nodelayer}"
-  ]
-  ++ fmap generateNode (nodes diagram) ++
-  [ "\\end{pgfonlayer}{nodelayer}"
-  , "\\begin{pgfonlayer}{edgelayer}"
-  ]
-  ++ fmap generateWire (wires diagram) ++
-  [ "\\end{pgfonlayer}"
-  , "\\end{tikzpicture}"
-  ]
-  where
-    generateNode :: Node -> String
-    generateNode node =
-      "\\node "
-      ++ "[style=" ++ show (style node) ++ "] "
-      ++ "(" ++ show (idNumber node) ++ ") "
-      ++ "at (" ++ show (xPos node) ++ ", " ++ show (yPos node) ++ ") "
-      ++ "{" ++ label node ++ "};"
-
-    generateWire :: Wire -> String
-    generateWire wire =
-      "\\draw ["
-      ++ "bend right=90, "
-      ++ "looseness=1.25] "
-      ++ "("
-      ++ (show . from) wire
-      ++ ".center) to ("
-      ++ (show . to) wire
-      ++ ".center);"
 
 shiftNodeId :: Int -> Schema -> Schema
 shiftNodeId n b = b
@@ -184,7 +127,7 @@ schemaCup n a b = joinSchemas a (shifted b)
        , schemaWires =
            schemaWires u ++ schemaWires v ++
            (fmap (\ (m , x , y) -> Wire
-                  { looseness = (fromIntegral m) :: Double
+                  { looseness = (fromIntegral m + 1.25) :: Double
                   , from = x
                   , to = y
                   })
@@ -202,3 +145,88 @@ instance HasCups Schema where
   cup = schemaCup
   cunit = schemaUnit
 
+-- Dangling wires
+
+
+
+
+textDiagrams :: [Words m] -> [Diagram]
+textDiagrams ws = do
+  solution <- sentence $ schemaWords ws
+  let textWires = schemaWires $ meaning solution
+  let textNodes = schemaNodes $ meaning solution
+  let openWires = danglingWires $ meaning solution
+  let openNodes = danglingNodes $ meaning solution
+  return Diagram
+    { nodes = allWordNodes ++ textNodes ++ openNodes
+    , wires = textWires ++ openWires
+    }
+  where
+
+    -- We need some word nodes that will generate triangles on the
+    -- final diagram.
+    allWordNodes :: [Node]
+    allWordNodes = fmap numberedNode $ zip [0..] ws
+
+    -- Numbered nodes.
+    numberedNode :: (Int , Words m) -> Node
+    numberedNode (n,w) = Node
+      { idNumber = n
+      , xPos     = fromIntegral n * 4
+      , yPos     = 0
+      , label    = text w
+      , style    = Copoint
+      }
+
+    danglingWires :: Schema -> [Wire]
+    danglingWires s = do
+      (f , t) <- zip (idNumber <$> preDanglingNodes s) (idNumber <$> danglingNodes s)
+      return $ Wire
+        { from = f
+        , to = t
+        , looseness = 0
+        }
+
+    danglingNodes :: Schema -> [Node]
+    danglingNodes s = (\p -> p { yPos = yPos p - 3 , idNumber = idNumber p + 100 }) <$> preDanglingNodes s
+
+    preDanglingNodes :: Schema -> [Node]
+    preDanglingNodes s = filter (not . (`elem` occupiedIds s) . idNumber) (schemaNodes s)
+
+    occupiedIds :: Schema -> [NodeId]
+    occupiedIds s =
+      (from <$> schemaWires s) ++
+      (to   <$> schemaWires s)
+
+generateTikz :: Diagram -> String
+generateTikz diagram = unlines $
+  [ "\\begin{tikzpicture}"
+  , "\\begin{pgfonlayer}{nodelayer}"
+  ]
+  ++ fmap generateNode (nodes diagram) ++
+  [ "\\end{pgfonlayer}{nodelayer}"
+  , "\\begin{pgfonlayer}{edgelayer}"
+  ]
+  ++ fmap generateWire (wires diagram) ++
+  [ "\\end{pgfonlayer}"
+  , "\\end{tikzpicture}"
+  ]
+  where
+    generateNode :: Node -> String
+    generateNode node =
+      "\\node "
+      ++ "[style=" ++ show (style node) ++ "] "
+      ++ "(" ++ show (idNumber node) ++ ") "
+      ++ "at (" ++ show (xPos node) ++ ", " ++ show (yPos node) ++ ") "
+      ++ "{" ++ label node ++ "};"
+
+    generateWire :: Wire -> String
+    generateWire wire =
+      "\\draw ["
+      ++ "bend right=90, "
+      ++ "looseness=" ++ (show . looseness) wire ++ "] "
+      ++ "("
+      ++ (show . from) wire
+      ++ ".center) to ("
+      ++ (show . to) wire
+      ++ ".center);"
