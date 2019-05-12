@@ -22,10 +22,13 @@ source-repository head
                        
 Library
   hs-source-dirs:      ./source
+
   build-depends:       base >=4.7 && <5,
                        containers >= 0.5.7.1
+
   exposed-modules:     Discokitty
                        Discokitty.Models.Rel
+                       Discokitty.Models.Diagrams
                        Discokitty.Models.Vectorspaces
                        Discokitty.Examples.LesJustesMain
                        Discokitty.Examples.LesJustesUniverse
@@ -38,7 +41,6 @@ Library
                        Discokitty.Lambek
                        Discokitty.Words
                        Discokitty.Multiwords
-                       Discokitty.Diagrams
 
   default-language:    Haskell2010
   ghc-options:         -Wall
