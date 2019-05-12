@@ -11,7 +11,7 @@ type RelU = Rel Universe
 
 -- Example: Yanek attacks the Duke
 yanek :: Words RelU
-yanek = Words yanekRel [ N ]
+yanek = Words yanekRel [ N ] "Yanek"
   where
     yanekRel :: RelU
     yanekRel = fromList
@@ -26,10 +26,10 @@ attacks :: Words RelU
 attacks = Words (fromList
   [ [ Yanek , IsTrue , Duke ]
   , [ Yanek , IsPlot , Duke ]
-  ]) [ L N , S , R N ]
+  ]) [ L N , S , R N ] "attacks"
 
 duke :: Words RelU
-duke = Words dukeRel [ N ]
+duke = Words dukeRel [ N ] "duke"
   where
     dukeRel :: RelU
     dukeRel = fromList
@@ -46,15 +46,15 @@ example2 = sentence [yanek , kills , duke] @@@ [ S ]
 lnot :: Universe -> Words RelU
 lnot adjective = Words
   (fromList $ fmap (\x -> [x , x]) $ filter (/= adjective) universe)
-  [L N , N]
+  [L N , N] ""
 
 rnot :: Universe -> Words RelU
 rnot adjective = Words
   (fromList $ fmap (\x -> [x , x]) $ filter (/= adjective) universe)
-  [N , R N]
+  [N , R N] ""
 
 cnst :: Universe -> Words RelU
-cnst adjective = Words (fromList [[ IsTrue ]]) [ S ]
+cnst adjective = Words (fromList [[ IsTrue ]]) [ S ] ""
 
 kills :: Words RelU
 kills =
@@ -68,7 +68,7 @@ example3 = sentence [ yanek , kills , duke ] @@@ [N , S , N]
 
 -- Example: Grammatical ambiguity (preparation).
 nephew :: Words RelU
-nephew = Words nephewRel [ N ]
+nephew = Words nephewRel [ N ] "nephew"
   where
     nephewRel :: RelU
     nephewRel = fromList
@@ -81,14 +81,14 @@ nephew = Words nephewRel [ N ]
 bomb :: Words RelU
 bomb = Words
   (fromList [ [Bomb] ])
-  [ N ]
+  [ N ] "bomb"
 
 and' :: Words RelU
 and' = Words
   (fromList $
     [ [ a , a , b ] | a <- universe , b <- universe ] ++
     [ [ a , b , b ] | a <- universe , b <- universe ])
-  [L N , N , R N]
+  [L N , N , R N] "and"
 
 example4a :: [Words RelU]
 example4a = sentence [ yanek , attacks , duke , and' , nephew ] @@@ [ S ]
@@ -100,7 +100,7 @@ using = Words
     , [ IsTrue , IsTrue , Bomb ]
     ]
   )
-  [L S , S , R N]
+  [L S , S , R N] "using"
 
 -- Example: Grammatical ambiguity (full).
 with :: M.Multiword RelU
@@ -135,7 +135,7 @@ becomes = Words
   (fromList $
      [ [ a ,     a , b ] | a <- universe , b <- universe ] ++
      [ [ Alive , b , b ] | b <- universe ])
-  [L N , N , R N]
+  [L N , N , R N] "becomes"
 
 becomes' :: M.Multiword RelU
 becomes' = M.singleton becomes
@@ -146,8 +146,8 @@ revolutionary = M.fromList $
   , ( revTerrorist , 0.5 )
   ]
   where
-    revSaviour = Words (fromList [[Revolutionary] , [Saviour]]) [ N ]
-    revTerrorist = Words (fromList [[Revolutionary] , [Terrorist]]) [ N ]
+    revSaviour = Words (fromList [[Revolutionary] , [Saviour]]) [ N ] "saviour"
+    revTerrorist = Words (fromList [[Revolutionary] , [Terrorist]]) [ N ] "terrorist"
 
 kills''' :: M.Multiword RelU
 kills''' =
@@ -164,22 +164,22 @@ kills''' =
        ]
     ++
     [  ])
-  [L N, N, N, R N]
+  [L N, N, N, R N] "kills"
 
 discarding' :: M.Multiword RelU
 discarding' =
   M.singleton $ Words
   (fromList
     [ [ a ] | a <- universe ])
-  [ L N ]
+  [ L N ] ""
 
 
-he = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , N]
-saviour = M.singleton $ Words (fromList [[Saviour]]) [N]
-terrorist = M.singleton $ Words (fromList [[Terrorist]]) [N]
-alive = M.singleton $ Words (fromList [[Alive]]) [N]
-is' = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , N]
-(?) = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , L N]
+he = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , N] "he"
+saviour = M.singleton $ Words (fromList [[Saviour]]) [N] "saviour"
+terrorist = M.singleton $ Words (fromList [[Terrorist]]) [N] "terrorist"
+alive = M.singleton $ Words (fromList [[Alive]]) [N] "alive"
+is' = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , N] "is"
+(?) = M.singleton $ Words (fromList [[a,a] | a <- universe]) [L N , L N] "?"
 
 example6 :: M.Multiword RelU
 example6 = (sentence1 <> sentence2 <> sentence3) M.@@ []
@@ -209,7 +209,7 @@ people = M.singleton $ Words
     , [Nephew]
     ]
   )
-  [N]
+  [N] "people"
 
 combat :: M.Multiword RelU
 combat = M.singleton $ Words
@@ -218,7 +218,7 @@ combat = M.singleton $ Words
      [ [r         , IsTrue , Skouratov] | r <- revolutionaries] ++
      [ [Skouratov , IsTrue , r]         | r <- revolutionaries] ++
      [ [Stepan    , IsTrue , Nephew] ])
-  [L N , S , R N]
+  [L N , S , R N] "combat"
     where
       revolutionaries = [Yanek, Dora, Stepan]
 
@@ -236,7 +236,7 @@ enjoy = M.singleton $ Words
     , [Dora , IsTrue , Yanek]
     , [Stepan , IsTrue , Dora]
     ])
-  [L N , S , R N]
+  [L N , S , R N] "enjoy"
 
 is_ :: M.Multiword RelU
 is_ = M.singleton $ Words
@@ -251,15 +251,15 @@ is_ = M.singleton $ Words
     , [Skouratov  , IsTrue , Tsarist]
     , [Nephew  , IsTrue , Innocent]
     ])
-  [L N , S , R N]
+  [L N , S , R N] "is"
 
 who :: M.Multiword RelU
 who = M.singleton $ Words
   (fromList [ [a , a , b , a ] | a <- universe , b <- universe ])
-  [ L N , N , R S , N ]
+  [ L N , N , R S , N ] "who"
 
 tsarist :: M.Multiword RelU
-tsarist = M.singleton $ Words (fromList [[Tsarist]]) [N]
+tsarist = M.singleton $ Words (fromList [[Tsarist]]) [N] "tsarist"
 
 tsarists :: M.Multiword RelU
 tsarists = (people <> who <> is_ <> tsarist) M.@@ [N]
@@ -275,19 +275,19 @@ example9 = (people <> who <> combat <> people <> who <> combat <> tsarists) M.@@
 
 -- Example: Revolutionaries who enjoy life enjoy propaganda
 life :: M.Multiword RelU
-life = M.singleton $ Words (fromList [[Life]]) [N]
+life = M.singleton $ Words (fromList [[Life]]) [N] "life"
 
 propaganda :: M.Multiword RelU
-propaganda = M.singleton $ Words (fromList [[Propaganda]]) [N]
+propaganda = M.singleton $ Words (fromList [[Propaganda]]) [N] "propaganda"
 
 innocent :: M.Multiword RelU
-innocent = M.singleton $ Words (fromList [[Innocent]]) [N]
+innocent = M.singleton $ Words (fromList [[Innocent]]) [N] "innocent"
 
 poetry :: M.Multiword RelU
-poetry = M.singleton $ Words (fromList [[Poetry]]) [N]
+poetry = M.singleton $ Words (fromList [[Poetry]]) [N] "poetry"
 
 chemistry :: M.Multiword RelU
-chemistry = M.singleton $ Words (fromList [[Chemistry]]) [N]
+chemistry = M.singleton $ Words (fromList [[Chemistry]]) [N] "chemistry"
 
 example10 :: M.Multiword RelU
 example10 = (revolutionaries <> who <> enjoy <> life <> enjoy <> propaganda) M.@@ [S]

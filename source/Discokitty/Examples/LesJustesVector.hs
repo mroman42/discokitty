@@ -24,14 +24,14 @@ yanek' = Words (fromList
   [ ([Yanek] , 1)
   , ([Poet]  , 0.7)
   , ([Revolutionary] , 0.9)
-  ]) [N]
+  ]) [N] "Yanek"
 
 dora' :: Words (Vectorspace Universe Double)
 dora' = Words (fromList
   [ ([Dora] , 1)
   , ([Revolutionary] , 0.9)
   , ([Poet] , 0.3)
-  ]) [N]
+  ]) [N] "Dora"
 
 likes' :: Words (Vectorspace Universe Double)
 likes' = Words (fromList
@@ -47,7 +47,7 @@ likes' = Words (fromList
   , ([Stepan , IsTrue , Life] , 0.1)
   , ([Boris , IsTrue , Life] , 0.3)
   , ([Boris , IsTrue , Propaganda] , 0.6)
-  ]) [L N , S , R N]
+  ]) [L N , S , R N] "likes"
 
 combat' :: Words (Vectorspace Universe Double)
 combat' = Words (fromList
@@ -62,7 +62,7 @@ combat' = Words (fromList
   , ([Boris , IsTrue , Nephew] , 0.1)
   , ([Skouratov , IsTrue , Yanek] , 0.9)
   , ([Skouratov , IsTrue , Stepan] , 1)
-  ]) [L N , S , R N]
+  ]) [L N , S , R N] "combat"
 
 is' :: Words (Vectorspace Universe Double)
 is' = Words (fromList
@@ -80,7 +80,7 @@ is' = Words (fromList
   , ([Nephew , IsTrue , Tsarist] , 0.3)
   , ([Nephew , IsTrue , Innocent] , 1)
   , ([Yanek , IsTrue , Innocent] , 0.5)
-  ]) [L N , S , R N]
+  ]) [L N , S , R N] "is"
 
 people' :: (Semiring m) => Words (Vectorspace Universe m)
 people' = Words (fromList
@@ -91,7 +91,7 @@ people' = Words (fromList
   , ([Nephew] , unit)
   , ([Skouratov] , unit)
   , ([Boris] , unit)
-  ]) [N]
+  ]) [N] "people"
 
 
 yanek = M.singleton yanek'
@@ -105,10 +105,10 @@ combat = M.singleton combat'
 who :: (Semiring m) => M.Multiword (Vectorspace Universe m)
 who = M.singleton $ Words
   (fromList [ ([a,a,b,a], unit) | a <- universe , b <- universe])
-  [L N , N , R S , N]
+  [L N , N , R S , N] "who"
 
 basis :: (Semiring m) => Universe -> M.Multiword (Vectorspace Universe m)
-basis t = M.singleton $ Words (fromList [ ([t], unit) ]) [N]
+basis t = M.singleton $ Words (fromList [ ([t], unit) ]) [N] "basis"
 
 tsarist, life, propaganda, poetry, innocent, terrorist :: (Semiring m) => M.Multiword (Vectorspace Universe m)
 tsarist    = basis Tsarist
@@ -120,7 +120,7 @@ terrorist  = basis Terrorist
 
 
 revolutionary :: (Semiring m) => M.Multiword (Vectorspace Universe m)
-revolutionary = M.singleton $ Words (fromList [ ([Revolutionary], unit) ]) [N]
+revolutionary = M.singleton $ Words (fromList [ ([Revolutionary], unit) ]) [N] "revolutionary"
 
 tsarists :: M.Multiword (Vectorspace Universe Double)
 tsarists = (people <> who <> is <> tsarist) M.@@ [N]

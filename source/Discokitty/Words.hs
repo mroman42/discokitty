@@ -16,7 +16,6 @@ module Discokitty.Words
 where
 
 import           Data.Maybe
-import           Discokitty.Dimension
 import           Discokitty.HasCups
 import           Discokitty.Lambek
 
@@ -25,6 +24,7 @@ import           Discokitty.Lambek
 data Words m = Words
   { meaning :: m
   , grammar :: Lambek
+  , text    :: String
   }
 
 instance Show m => Show (Words m) where
@@ -40,6 +40,7 @@ maybeCon n u v =
     then Just $ Words
       { meaning = (cup n (meaning u) (meaning v))
       , grammar = reverse (drop n (reverse $ grammar u)) ++ drop n (grammar v)
+      , text = text u ++ " " ++ text v
       }
     else Nothing
 
@@ -57,10 +58,10 @@ ws @@@ l = filter (\ x -> grammar x == l) ws
 (...) :: (HasCups m) => Words m -> [Words m] -> [Words m]
 w ... xs = concat $ do
   x <- xs
-  return (concatenate w x)
+  return $ concatenate w x
 
 emptyWord :: (HasCups m) => Words m
-emptyWord = Words cunit []
+emptyWord = Words cunit [] ""
 
 sentence :: (HasCups m) => [Words m] -> [Words m]
 sentence = foldr (...) [emptyWord]
