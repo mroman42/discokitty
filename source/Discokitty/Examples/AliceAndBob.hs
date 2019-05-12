@@ -1,6 +1,7 @@
 module Discokitty.Examples.AliceAndBob where
 
 import           Discokitty
+import           Discokitty.Diagrams
 import           Discokitty.Models.Rel
 
 -- We first declare an universe with all the possible basis words,
@@ -14,11 +15,11 @@ data Universe = Alice | Bob | IsTrue | IsFalse deriving (Eq, Ord, Show)
 type Term = Words (Rel Universe)
 
 -- We give meaning to some terms.  Relations are described as subsets using
--- "fromList", and the Lambek grammatical type must be written at the end.
+-- "relation", and the Lambek grammatical type must be written at the end.
 alice, bob, loves :: Term
-alice = Words (relation [ [ Alice ] ]) [N]
-bob   = Words (relation [ [ Bob ] ]) [N]
-loves = Words (relation [ [ Alice , IsTrue , Bob ] ]) [ L N , S , R N ]
+alice = Words (relation [ [ Alice ] ]) [N] "Alice"
+bob   = Words (relation [ [ Bob ] ]) [N] "Bob"
+loves = Words (relation [ [ Alice , IsTrue , Bob ] ]) [ L N , S , R N ] "loves"
 
 -- In our example sentence, we evaluate "Alice loves Bob".
 example :: [Term]
@@ -26,3 +27,6 @@ example = sentence [alice , loves , bob] @@@ [S]
 
 -- This produces the following output:
 --   > [[IsTrue]] of grammar type [S]
+
+exampleDiagram :: String
+exampleDiagram = unlines . fmap generateTikz . textDiagrams $ [alice , loves , bob]

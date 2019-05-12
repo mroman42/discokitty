@@ -38,6 +38,7 @@ Library
                        Discokitty.Lambek
                        Discokitty.Words
                        Discokitty.Multiwords
+                       Discokitty.Diagrams
 
   default-language:    Haskell2010
   ghc-options:         -Wall

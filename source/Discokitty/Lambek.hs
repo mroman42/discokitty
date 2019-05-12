@@ -16,7 +16,6 @@ where
 data Type = N | S | L Type | R Type deriving (Eq, Ord, Show)
 type Lambek = [Type]
 
-
 (>~<) :: Type -> Type -> Bool
 a     >~< (L b) = (a == b)
 (R a) >~< b     = (a == b)
