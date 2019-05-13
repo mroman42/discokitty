@@ -28,14 +28,14 @@ type Lambek = [Type]
 -- if one is the left/right adjoint of the other. Note that this is
 -- not commutative.
 (>~<) :: Type -> Type -> Bool
-a     >~< (L b) = (a == b)
-(R a) >~< b     = (a == b)
+a     >~< (L b) = a == b
+(R a) >~< b     = a == b
 _     >~< _     = False
 
 -- | Outputs true if the two Lambek pregroup words can be completely
 -- reduced.
 agree :: Lambek -> Lambek -> Bool
-agree p q = all id $ zipWith (>~<) p q
+agree p = and . zipWith (>~<) p
 
 -- | Checks if two Lambek types can be reduced a given number of
 -- steps.

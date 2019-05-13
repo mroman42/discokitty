@@ -24,13 +24,12 @@ type Probability = Double
 -- | A multiword is given by a list of different words with different
 -- probabilities. Note that these words do not need to have the same
 -- grammar types.
-data Multiword m = Multiword [(Words m , Probability)]
+newtype Multiword m = Multiword [(Words m , Probability)]
 
 -- | Shows a multiword as a list of acceptations.
 instance (Show m) => Show (Multiword m) where
   show =
-    concat .
-    intersperse "\n" .
+    intercalate "\n" .
     fmap (\ (w, p) -> show w ++ " with p=" ++ show p) .
     toList
 

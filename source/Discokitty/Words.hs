@@ -40,8 +40,8 @@ size w = length (grammar w)
 maybeCon :: (HasCups m) => Int -> Words m -> Words m -> Maybe (Words m)
 maybeCon n u v =
   if agreeOn n (grammar u) (grammar v)
-    then Just $ Words
-      { meaning = (cup n (meaning u) (meaning v))
+    then Just Words
+      { meaning = cup n (meaning u) (meaning v)
       , grammar = reverse (drop n (reverse $ grammar u)) ++ drop n (grammar v)
       , text = text u ++ " " ++ text v
       }
@@ -51,7 +51,7 @@ maybeCon n u v =
 -- of cups.  It outputs all the ones that are successful, that is, the
 -- ones making the grammatical types match.
 tryConcatenate :: (HasCups m) => Int -> Words m -> Words m -> [Words m]
-tryConcatenate n a b = catMaybes $ [maybeCon m a b | m <- [0..n]]
+tryConcatenate n a b = catMaybes [maybeCon m a b | m <- [0..n]]
 
 concatenate :: (HasCups m) => Words m -> Words m -> [Words m]
 concatenate a b = tryConcatenate (min (size a) (size b)) a b
@@ -61,9 +61,7 @@ concatenate a b = tryConcatenate (min (size a) (size b)) a b
 ws @@@ l = filter (\ x -> grammar x == l) ws
 
 (...) :: (HasCups m) => Words m -> [Words m] -> [Words m]
-w ... xs = concat $ do
-  x <- xs
-  return $ concatenate w x
+w ... xs = concat $ concatenate w <$> xs
 
 -- | Empty word. Unit for concatenation of words.
 emptyWord :: (HasCups m) => Words m

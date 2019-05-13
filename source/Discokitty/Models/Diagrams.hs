@@ -173,7 +173,7 @@ textDiagrams ws = do
     -- We need some word nodes that will generate triangles on the
     -- final diagram.
     allWordNodes :: [Node]
-    allWordNodes = fmap numberedNode $ zip [0..] ws
+    allWordNodes = numberedNode <$> zip [0..] ws
 
     -- Numbered nodes.
     numberedNode :: (Int , Words m) -> Node
@@ -188,7 +188,7 @@ textDiagrams ws = do
     danglingWires :: Schema -> [Wire]
     danglingWires s = do
       (f , t) <- zip (idNumber <$> preDanglingNodes s) (idNumber <$> danglingNodes s)
-      return $ Wire
+      return Wire
         { from = f
         , to = t
         , looseness = 0

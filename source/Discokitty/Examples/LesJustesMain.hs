@@ -45,16 +45,16 @@ example2 = sentence [yanek , kills , duke] @@@ [ S ]
 -- Example: Semicartesian verbs
 lnot :: Universe -> Words RelU
 lnot adjective = Words
-  (fromList $ fmap (\x -> [x , x]) $ filter (/= adjective) universe)
+  (fromList $ (\x -> [x , x]) <$> filter (/= adjective) universe)
   [L N , N] ""
 
 rnot :: Universe -> Words RelU
 rnot adjective = Words
-  (fromList $ fmap (\x -> [x , x]) $ filter (/= adjective) universe)
+  (fromList $ (\x -> [x , x]) <$> filter (/= adjective) universe)
   [N , R N] ""
 
 cnst :: Universe -> Words RelU
-cnst adjective = Words (fromList [[ IsTrue ]]) [ S ] ""
+cnst _ = Words (fromList [[ IsTrue ]]) [ S ] ""
 
 kills :: Words RelU
 kills =
