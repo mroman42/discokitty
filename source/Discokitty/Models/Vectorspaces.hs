@@ -42,7 +42,7 @@ instance (Show m, Show u) => Show (Vectorspace u m) where
 
 -- | Creates a sparse vector from a list of basis elements multiplied
 -- by scalars.
-sparse :: (Ord u, Eq u, Semiring m) => [([u] , m)] -> Vectorspace u m
+sparse :: (Ord u, Eq u, Semiring m) => [([u], m)] -> Vectorspace u m
 sparse = fromList
 
 -- | Creates a sparse vector from a map assigning a scalar to each
@@ -54,21 +54,21 @@ fromMap = Vector
 toMap :: Vectorspace u m -> Map.Map [u] m
 toMap (Vector v) = v
 
-toList :: Vectorspace u m -> [([u] , m)]
+toList :: Vectorspace u m -> [([u], m)]
 toList = Map.toList . toMap
 
-fromList :: (Ord u, Eq u, Semiring m) => [([u] , m)] -> Vectorspace u m
+fromList :: (Ord u, Eq u, Semiring m) => [([u], m)] -> Vectorspace u m
 fromList = fromMap . removeZerosM . Map.fromList . nubPlus
-  where
-    nubPlus :: (Ord u, Eq u, Semiring m) => [([u] , m)] -> [([u] , m)]
-    nubPlus = fmap addTogether . (groupBy (\ x y -> fst x == fst y))
-    addTogether :: (Ord u, Eq u, Semiring m) => [([u] , m)] -> ([u] , m)
-    addTogether []              = undefined
-    addTogether l@((u , _) : _) = (u , foldr plus zero (fmap snd l))
+ where
+  nubPlus :: (Ord u, Eq u, Semiring m) => [([u], m)] -> [([u], m)]
+  nubPlus = fmap addTogether . (groupBy (\x y -> fst x == fst y))
+  addTogether :: (Ord u, Eq u, Semiring m) => [([u], m)] -> ([u], m)
+  addTogether []             = undefined
+  addTogether l@((u, _) : _) = (u, foldr plus zero (fmap snd l))
 
 -- | Auxiliary function that removes zeroes from the sparse
 -- representation as a map.
-removeZerosM :: (Semiring m) => Map.Map [u] m -> Map.Map [u]  m
+removeZerosM :: (Semiring m) => Map.Map [u] m -> Map.Map [u] m
 removeZerosM = Map.filter (/= zero)
 
 -- | Auxiliary function that removes zeroes from the sparse
@@ -92,16 +92,21 @@ instance Dim (Vectorspace u m) where
 
 dimVec :: Vectorspace u m -> Int
 dimVec = dimList . Map.toList . toMap
-  where
-    dimList []      = 0
-    dimList (l : _) = length (fst l)
+ where
+  dimList []      = 0
+  dimList (l : _) = length (fst l)
 
 -- | The cup opreation for vectors. Implements the scalar product.
-vecCup :: (Ord u, Eq u, Semiring m) => Int -> Vectorspace u m -> Vectorspace u m -> Vectorspace u m
+vecCup
+  :: (Ord u, Eq u, Semiring m)
+  => Int
+  -> Vectorspace u m
+  -> Vectorspace u m
+  -> Vectorspace u m
 vecCup n r s = normalize . fromList . catMaybes . fmap (agrees n) $ do
-  (a , x) <- toList r
-  (b , y) <- toList s
-  return ((a,b) , mult x y)
+  (a, x) <- toList r
+  (b, y) <- toList s
+  return ((a, b), mult x y)
 
 -- | The unit for the cup is just the identity state for vector
 -- spaces.
@@ -110,11 +115,10 @@ vecUnit = fromList [([], unit)]
 
 -- | Checks if two vectors have a shared basis element with a non zero
 -- coefficient.  This is an auxiliary function for the scalar product.
-agrees :: (Eq u, Semiring m) => Int -> (([u] , [u]) , m) -> Maybe ([u] , m)
-agrees n ((x , y) , m) =
-  if take n (reverse x) == take n y
-    then Just $ (reverse (drop n (reverse x)) ++ drop n y , m)
-    else Nothing
+agrees :: (Eq u, Semiring m) => Int -> (([u], [u]), m) -> Maybe ([u], m)
+agrees n ((x, y), m) = if take n (reverse x) == take n y
+  then Just $ (reverse (drop n (reverse x)) ++ drop n y, m)
+  else Nothing
 
 instance (Ord u, Eq u, Semiring m) => HasCups (Vectorspace u m) where
   cup   = vecCup

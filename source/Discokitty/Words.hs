@@ -38,27 +38,26 @@ size w = length (grammar w)
 -- | Tries to concatenate two words a given number of times. Fails if
 -- the grammar types do not coincide.
 maybeCon :: (HasCups m) => Int -> Words m -> Words m -> Maybe (Words m)
-maybeCon n u v =
-  if agreeOn n (grammar u) (grammar v)
-    then Just Words
-      { meaning = cup n (meaning u) (meaning v)
-      , grammar = reverse (drop n (reverse $ grammar u)) ++ drop n (grammar v)
-      , text = text u ++ " " ++ text v
-      }
-    else Nothing
+maybeCon n u v = if agreeOn n (grammar u) (grammar v)
+  then Just Words
+    { meaning = cup n (meaning u) (meaning v)
+    , grammar = reverse (drop n (reverse $ grammar u)) ++ drop n (grammar v)
+    , text    = text u ++ " " ++ text v
+    }
+  else Nothing
 
 -- | Tries all possible reductions of two words up to a given number
 -- of cups.  It outputs all the ones that are successful, that is, the
 -- ones making the grammatical types match.
 tryConcatenate :: (HasCups m) => Int -> Words m -> Words m -> [Words m]
-tryConcatenate n a b = catMaybes [maybeCon m a b | m <- [0..n]]
+tryConcatenate n a b = catMaybes [ maybeCon m a b | m <- [0 .. n] ]
 
 concatenate :: (HasCups m) => Words m -> Words m -> [Words m]
 concatenate a b = tryConcatenate (min (size a) (size b)) a b
 
 -- | Filters a list of words by grammatical type.
 (@@@) :: [Words m] -> Lambek -> [Words m]
-ws @@@ l = filter (\ x -> grammar x == l) ws
+ws @@@ l = filter (\x -> grammar x == l) ws
 
 (...) :: (HasCups m) => Words m -> [Words m] -> [Words m]
 w ... xs = concat $ concatenate w <$> xs

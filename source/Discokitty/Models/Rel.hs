@@ -47,24 +47,23 @@ instance Dim (Rel u) where
 
 dimRel :: Rel u -> Int
 dimRel = dimList . toList
-  where
-    dimList []      = 0
-    dimList (l : _) = length l
+ where
+  dimList []      = 0
+  dimList (l : _) = length l
 
 relCup :: (Ord u) => Int -> Rel u -> Rel u -> Rel u
 relCup n r s = relation $ catMaybes $ fmap (agrees n) $ do
   x <- toList r
   y <- toList s
-  return (x,y)
+  return (x, y)
 
 relCunit :: (Ord u) => Rel u
 relCunit = relation [[]]
 
-agrees :: (Eq u) => Int -> ([u] , [u]) -> Maybe [u]
-agrees n (x , y) =
-  if take n (reverse x) == take n y
-    then Just $ reverse (drop n (reverse x)) ++ drop n y
-    else Nothing
+agrees :: (Eq u) => Int -> ([u], [u]) -> Maybe [u]
+agrees n (x, y) = if take n (reverse x) == take n y
+  then Just $ reverse (drop n (reverse x)) ++ drop n y
+  else Nothing
 
 instance (Ord u) => HasCups (Rel u) where
   cup = relCup

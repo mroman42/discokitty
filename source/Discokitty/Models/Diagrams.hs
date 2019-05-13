@@ -72,80 +72,77 @@ nodeWidth = 4
 generateNodes :: Int -> Words m -> Words Schema
 generateNodes offset w = Words
   { meaning = Schema
-    { schemaNodes = createNode <$> [0..(len-1)]
+    { schemaNodes = createNode <$> [0 .. (len - 1)]
     , schemaWires = []
-    , nWords = 1
+    , nWords      = 1
     }
   , grammar = grammar w
-  , text = ""
+  , text    = ""
   }
-  where
-    createNode :: Int -> Node
-    createNode n = Node
-      { idNumber = offset + n
-      , xPos = ((fromIntegral n + 1) * nodeWidth / (fromIntegral len + 1)) - (nodeWidth / 2.0)
-      , yPos = 0
-      , label = ""
-      , style = None
-      }
+ where
+  createNode :: Int -> Node
+  createNode n = Node
+    { idNumber = offset + n
+    , xPos     = ((fromIntegral n + 1) * nodeWidth / (fromIntegral len + 1))
+      - (nodeWidth / 2.0)
+    , yPos     = 0
+    , label    = ""
+    , style    = None
+    }
 
-    len :: Int
-    len = length $ grammar w
+  len :: Int
+  len = length $ grammar w
 
 schemaWords :: [Words m] -> [Words Schema]
 schemaWords ws = (generateNodes . length) ws <$> ws
 
 shiftNodeId :: Int -> Schema -> Schema
 shiftNodeId n b = b
-  { schemaNodes = fmap (\ p -> p
-      { idNumber = n + idNumber p
-      }) $ schemaNodes b
+  { schemaNodes = fmap (\p -> p { idNumber = n + idNumber p }) $ schemaNodes b
   }
 
 shiftNodePos :: Int -> Schema -> Schema
 shiftNodePos p b = b
-  { schemaNodes = fmap (\q -> q
-     { xPos = 4.0 * (fromIntegral p) + xPos q
-     }) $ schemaNodes b
+  { schemaNodes = fmap (\q -> q { xPos = 4.0 * (fromIntegral p) + xPos q })
+    $ schemaNodes b
   }
 
 shiftWiresId :: Int -> Schema -> Schema
 shiftWiresId n b = b
-  { schemaWires = fmap (\q -> q
-      { from = n + from q
-      , to   = n + to q
-      }) $ schemaWires b
+  { schemaWires = fmap (\q -> q { from = n + from q, to = n + to q })
+    $ schemaWires b
   }
 
 schemaCup :: Int -> Schema -> Schema -> Schema
 schemaCup n a b = joinSchemas a (shifted b)
-  where
-    shifted :: Schema -> Schema
-    shifted =
-      shiftNodePos (nWords a)
+ where
+  shifted :: Schema -> Schema
+  shifted =
+    shiftNodePos (nWords a)
       . shiftWiresId (length (schemaNodes a))
       . shiftNodeId (length (schemaNodes a))
 
-    joinSchemas :: Schema -> Schema -> Schema
-    joinSchemas u v = Schema
-       { schemaNodes = schemaNodes u ++ schemaNodes v
-       , nWords = nWords u + nWords v
-       , schemaWires =
-           schemaWires u ++ schemaWires v ++
-           (fmap (\ (m , x , y) -> Wire
-                  { looseness = (fromIntegral m + 1.25) :: Double
-                  , from = x
-                  , to = y
-                  })
-            $ zip3 [0..(n-1)] (reverse (idNumber <$> schemaNodes u)) (idNumber <$> schemaNodes v))
-       }
+  joinSchemas :: Schema -> Schema -> Schema
+  joinSchemas u v = Schema
+    { schemaNodes = schemaNodes u ++ schemaNodes v
+    , nWords      = nWords u + nWords v
+    , schemaWires = schemaWires u
+      ++ schemaWires v
+      ++ ( fmap
+             (\(m, x, y) -> Wire
+               { looseness = (fromIntegral m + 1.25) :: Double
+               , from      = x
+               , to        = y
+               }
+             )
+         $ zip3 [0 .. (n - 1)]
+                (reverse (idNumber <$> schemaNodes u))
+                (idNumber <$> schemaNodes v)
+         )
+    }
 
 schemaUnit :: Schema
-schemaUnit = Schema
-  { schemaNodes = []
-  , schemaWires = []
-  , nWords = 0
-  }
+schemaUnit = Schema {schemaNodes = [], schemaWires = [], nWords = 0}
 
 instance HasCups Schema where
   cup = schemaCup
@@ -168,70 +165,75 @@ textDiagrams ws = do
     { nodes = allWordNodes ++ textNodes ++ openNodes
     , wires = textWires ++ openWires
     }
-  where
+ where
 
     -- We need some word nodes that will generate triangles on the
     -- final diagram.
-    allWordNodes :: [Node]
-    allWordNodes = numberedNode <$> zip [0..] ws
+  allWordNodes :: [Node]
+  allWordNodes = numberedNode <$> zip [0 ..] ws
 
-    -- Numbered nodes.
-    numberedNode :: (Int , Words m) -> Node
-    numberedNode (n,w) = Node
-      { idNumber = n
-      , xPos     = fromIntegral n * 4
-      , yPos     = 0
-      , label    = text w
-      , style    = Copoint
-      }
+  -- Numbered nodes.
+  numberedNode :: (Int, Words m) -> Node
+  numberedNode (n, w) = Node
+    { idNumber = n
+    , xPos     = fromIntegral n * 4
+    , yPos     = 0
+    , label    = text w
+    , style    = Copoint
+    }
 
-    danglingWires :: Schema -> [Wire]
-    danglingWires s = do
-      (f , t) <- zip (idNumber <$> preDanglingNodes s) (idNumber <$> danglingNodes s)
-      return Wire
-        { from = f
-        , to = t
-        , looseness = 0
-        }
+  danglingWires :: Schema -> [Wire]
+  danglingWires s = do
+    (f, t) <- zip (idNumber <$> preDanglingNodes s)
+                  (idNumber <$> danglingNodes s)
+    return Wire {from = f, to = t, looseness = 0}
 
-    danglingNodes :: Schema -> [Node]
-    danglingNodes s = (\p -> p { yPos = yPos p - 3 , idNumber = idNumber p + 100 }) <$> preDanglingNodes s
+  danglingNodes :: Schema -> [Node]
+  danglingNodes s =
+    (\p -> p { yPos = yPos p - 3, idNumber = idNumber p + 100 })
+      <$> preDanglingNodes s
 
-    preDanglingNodes :: Schema -> [Node]
-    preDanglingNodes s = filter (not . (`elem` occupiedIds s) . idNumber) (schemaNodes s)
+  preDanglingNodes :: Schema -> [Node]
+  preDanglingNodes s =
+    filter (not . (`elem` occupiedIds s) . idNumber) (schemaNodes s)
 
-    occupiedIds :: Schema -> [NodeId]
-    occupiedIds s =
-      (from <$> schemaWires s) ++
-      (to   <$> schemaWires s)
+  occupiedIds :: Schema -> [NodeId]
+  occupiedIds s = (from <$> schemaWires s) ++ (to <$> schemaWires s)
 
 generateTikz :: Diagram -> String
-generateTikz diagram = unlines $
-  [ "\\begin{tikzpicture}"
-  , "\\begin{pgfonlayer}{nodelayer}"
-  ]
-  ++ fmap generateNode (nodes diagram) ++
-  [ "\\end{pgfonlayer}{nodelayer}"
-  , "\\begin{pgfonlayer}{edgelayer}"
-  ]
-  ++ fmap generateWire (wires diagram) ++
-  [ "\\end{pgfonlayer}"
-  , "\\end{tikzpicture}"
-  ]
-  where
-    generateNode :: Node -> String
-    generateNode node =
-      "\\node "
-      ++ "[style=" ++ show (style node) ++ "] "
-      ++ "(" ++ show (idNumber node) ++ ") "
-      ++ "at (" ++ show (xPos node) ++ ", " ++ show (yPos node) ++ ") "
-      ++ "{" ++ label node ++ "};"
+generateTikz diagram =
+  unlines
+    $  ["\\begin{tikzpicture}", "\\begin{pgfonlayer}{nodelayer}"]
+    ++ fmap generateNode (nodes diagram)
+    ++ ["\\end{pgfonlayer}{nodelayer}", "\\begin{pgfonlayer}{edgelayer}"]
+    ++ fmap generateWire (wires diagram)
+    ++ ["\\end{pgfonlayer}", "\\end{tikzpicture}"]
+ where
+  generateNode :: Node -> String
+  generateNode node =
+    "\\node "
+      ++ "[style="
+      ++ show (style node)
+      ++ "] "
+      ++ "("
+      ++ show (idNumber node)
+      ++ ") "
+      ++ "at ("
+      ++ show (xPos node)
+      ++ ", "
+      ++ show (yPos node)
+      ++ ") "
+      ++ "{"
+      ++ label node
+      ++ "};"
 
-    generateWire :: Wire -> String
-    generateWire wire =
-      "\\draw ["
+  generateWire :: Wire -> String
+  generateWire wire =
+    "\\draw ["
       ++ "bend right=90, "
-      ++ "looseness=" ++ (show . looseness) wire ++ "] "
+      ++ "looseness="
+      ++ (show . looseness) wire
+      ++ "] "
       ++ "("
       ++ (show . from) wire
       ++ ".center) to ("

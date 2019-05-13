@@ -33,21 +33,21 @@ instance (Show m) => Show (Multiword m) where
     fmap (\ (w, p) -> show w ++ " with p=" ++ show p) .
     toList
 
-toList :: Multiword m -> [(Words m , Probability)]
+toList :: Multiword m -> [(Words m, Probability)]
 toList (Multiword a) = a
 
-fromList :: [(Words m , Probability)] -> Multiword m
+fromList :: [(Words m, Probability)] -> Multiword m
 fromList = Multiword
 
 singleton :: Words m -> Multiword m
-singleton w = fromList [(w,1.0)]
+singleton w = fromList [(w, 1.0)]
 
 -- | Concatenates the meaning of multiple multiwords using the formal
 -- cups on the meaning category.
 multiconcat :: (HasCups m) => Multiword m -> Multiword m -> Multiword m
 multiconcat x y = fromList $ do
-  (w , p) <- toList x
-  (v , q) <- toList y
+  (w, p) <- toList x
+  (v, q) <- toList y
   let concats = concatenate w v
   let newprob = (p * q) / fromIntegral (length concats)
   zip concats (repeat newprob)
@@ -56,7 +56,7 @@ infixr 4 `multiconcat`
 
 -- | The empty word for a formal cups multiword.
 multiempty :: (HasCups m) => Multiword m
-multiempty = fromList [( emptyWord , 1 )]
+multiempty = fromList [(emptyWord, 1)]
 
 instance (HasCups m) => Semigroup (Multiword m) where
   (<>) = multiconcat
@@ -72,8 +72,8 @@ sentence = mconcat
 -- | Filters the acceptations of the multiword that match the given
 -- Lambek type.
 (@@) :: Multiword m -> Lambek -> Multiword m
-ws @@ l = fromList $ fmap (\ (x,p) -> (x , p / totalprob)) newlist
-  where
-    totalprob = sum $ fmap snd newlist
-    newlist = filter (\ (x , _) -> grammar x == l) (toList ws)
+ws @@ l = fromList $ fmap (\(x, p) -> (x, p / totalprob)) newlist
+ where
+  totalprob = sum $ fmap snd newlist
+  newlist   = filter (\(x, _) -> grammar x == l) (toList ws)
 
