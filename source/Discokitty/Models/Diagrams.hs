@@ -1,3 +1,16 @@
+{-|
+Module: Diagrams
+Description: A category whose morphisms are tikz diagrams.
+License: GPL-3
+
+This module allows us to obtain diagrams for our sentences. In order
+to obtain these, we define a monoidal category whose morphisms are
+diagrams and then implement a cup operation on that category that
+consists on wiring two of them together.  We apply then the ideas of
+DisCoCat to words whose meanings are themselves diagrams, and just
+perform the necessary reductions.
+|-}
+
 module Discokitty.Models.Diagrams
   ( tikzDiagrams
   )
@@ -5,7 +18,6 @@ where
 
 
 import           Discokitty.HasCups
-import           Discokitty.Lambek
 import           Discokitty.Words
 
 -- | A node on a tikzpicture represents one particular position. It
@@ -40,12 +52,6 @@ data Wire = Wire
 data Diagram = Diagram
   { wires :: [Wire]
   , nodes :: [Node]
-  }
-  deriving (Show)
-
-data Port = Port
-  { portType :: Type
-  , portNode :: Node
   }
   deriving (Show)
 
@@ -88,9 +94,6 @@ generateNodes offset w = Words
 
 schemaWords :: [Words m] -> [Words Schema]
 schemaWords ws = (generateNodes . length) ws <$> ws
-
-
-
 
 shiftNodeId :: Int -> Schema -> Schema
 shiftNodeId n b = b

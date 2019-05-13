@@ -75,4 +75,4 @@ exampleDiagram = tikzDiagrams [alice , loves , bob]
 
 The generated tikz diagram looks as follows.
 
-<img src="https://raw.githubusercontent.com/mroman42/discokitty/master/alicelovesbob.jpg" width="200" align="center">
+<img src="https://raw.githubusercontent.com/mroman42/discokitty/master/alicelovesbob.jpg" width="300" align="center">
