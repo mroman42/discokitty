@@ -12,6 +12,7 @@ module Discokitty.Words
   , concatenate
   , emptyWord
   , (@@@)
+  , (@@@@)
   )
 where
 
@@ -58,6 +59,9 @@ concatenate a b = tryConcatenate (min (size a) (size b)) a b
 -- | Filters a list of words by grammatical type.
 (@@@) :: [Words m] -> Lambek -> [Words m]
 ws @@@ l = filter (\x -> grammar x == l) ws
+
+(@@@@) :: [Words m] -> Lambek -> Words m
+ws @@@@ l = head $ (ws @@@ l)
 
 (...) :: (HasCups m) => Words m -> [Words m] -> [Words m]
 w ... xs = concat $ concatenate w <$> xs

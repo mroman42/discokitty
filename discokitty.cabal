@@ -33,8 +33,11 @@ Library
                        Discokitty.Examples.LesJustesMain
                        Discokitty.Examples.LesJustesUniverse
                        Discokitty.Examples.LesJustesViterbi
+                       Discokitty.Examples.LesJustesViterbi2
                        Discokitty.Examples.LesJustesVector
                        Discokitty.Examples.AliceAndBob
+                       Discokitty.Examples.ConvexSpaces
+                       Discokitty.Examples.Books
 
   other-modules:       Discokitty.Dimension
                        Discokitty.HasCups

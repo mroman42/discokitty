@@ -17,24 +17,16 @@ type Term = Words (Rel Universe)
 -- We give meaning to some terms.  Relations are described as subsets using
 -- "relation", and the Lambek grammatical type must be written at the end.
 alice :: Term
-alice = Words
-  { meaning = relation [ [ Alice ] ]
-  , grammar = [N]
-  , text = "Alice"
-  }
+alice = Words {meaning = relation [[Alice]], grammar = [N], text = "Alice"}
 
 bob :: Term
-bob = Words
-  { meaning = relation [ [ Bob ] ]
-  , grammar = [N]
-  , text = "Bob"
-  }
+bob = Words {meaning = relation [[Bob]], grammar = [N], text = "Bob"}
 
 loves :: Term
 loves = Words
-  { meaning = relation [ [ Alice , IsTrue , Bob ] ]
-  , grammar = [ L N , S , R N ]
-  , text = "loves"
+  { meaning = relation [[Alice, IsTrue, Bob]]
+  , grammar = [L N, S, R N]
+  , text    = "loves"
   }
 
 
@@ -42,9 +34,9 @@ loves = Words
 -- This produces the following output:
 --   > [[IsTrue]] of grammar type [S]
 example :: [Term]
-example = sentence [alice , loves , bob] @@@ [S]
+example = sentence [alice, loves, bob] @@@ [S]
 
 
 -- We can also generate Tikz diagrams.
 exampleDiagram :: String
-exampleDiagram = tikzDiagrams [alice , loves , bob]
+exampleDiagram = tikzDiagrams [alice, loves, bob]
