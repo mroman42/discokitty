@@ -12,6 +12,7 @@ Sadrzadeh and Clark.
 *[Sunglasses Kitty](https://thenounproject.com/Gilleas/collection/kitty-emoticons/?i=359412#) 
 by Rikki Lorie, licensed under Creative Commons*
 
+ - [Distributional models of meaning. Semantical, grammatical, and moral ambiguity](https://www.cs.ox.ac.uk/people/bob.coecke/DMM_Mario.pdf). Mario Román, under the supervision of Bob Coecke (2019).
 
 ## Usage example
 
